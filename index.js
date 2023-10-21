@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
 const app = express()
 const port = process.env.PORT || 5000;
 
@@ -33,6 +34,28 @@ async function run() {
             const result = await productCollection.find().toArray();
             res.send(result);
         })
+        // get single id using get method
+        app.get("/myCart/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await productCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // delete single user
+        app.delete("/myCart/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = {
+                _id: new ObjectId(id),
+            };
+            const result = await productCollection.deleteOne(query);
+            console.log(result);
+            // res.send(result);
+        });
+
+
         app.post("/product", async (req, res) => {
             const product = req.body;
             console.log(product);
